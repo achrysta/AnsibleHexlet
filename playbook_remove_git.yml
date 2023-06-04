@@ -1,0 +1,6 @@
+- hosts: servers
+  tasks:
+  - name: remove git
+    apt: 
+     name: git
+     state: absent
