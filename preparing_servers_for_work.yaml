@@ -1,0 +1,58 @@
+- hosts: servers
+  vars:
+    vaulted_password_arya: superPass3
+    vaulted_password_sansa: superPass2
+    vaulted_password_tirion: superPass
+  tasks:
+   - name: apt-get update
+     apt:
+      update_cache: yes
+     tags: update
+   - name: install git
+     apt:
+      name: git
+      state: present
+     tags: git
+   - name: create groups developers
+     group:
+      name: developers
+      state: present
+     tags: create_group
+   - name: creare groups qa
+     group:
+      name: qa
+      state: present
+     tags: create_group
+   - name: create user arya
+     user:
+      name: arya
+      password: "{{ vaulted_password_arya | password_hash('sha512') }}"
+      update_password: on_create 
+     tags: create_user, create_user arya
+   - name: create user sansa
+     user:
+      name: sansa
+      password: "{{ vaulted_password_sansa | password_hash('sha512') }}"
+      update_password: on_create 
+     tags: create_user, create user sansa
+   - name: create user tirion
+     user:
+      name: tirion
+      password: "{{ vaulted_password_tirion | password_hash('sha512') }}"
+      update_password: on_create
+     tags: create_user, create user tirion
+   - name: add_arya_in developers
+     user:
+      name: arya
+      groups: developers
+      append: yes
+   - name: add_sansa_in developers
+     user:
+      name: sansa
+      groups: developers
+      append: yes
+   - name: add_tirion_in developers
+     user:
+      name: tirion
+      groups: developers
+      append: yes
